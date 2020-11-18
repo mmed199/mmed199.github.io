@@ -278,12 +278,12 @@ class MyAudioPlayer extends HTMLElement {
     var heightBar;
     var x = 0;
     for(var i = 0; i < this.bufferLength; i++) {
-      heightBar = this.dataArray[i]/2;
+      heightBar = this.dataArray[i];
 
-      this.canvasContext.fillStyle = 'rgb(' + (heightBar+100) + ',50,50)';
-      this.canvasContext.fillRect(x,this.height-heightBar/2,widthBar,heightBar);
+      this.canvasContext.fillStyle = 'rgb(50,' + (heightBar+100) + ',50)';
+      this.canvasContext.fillRect(x ,this.height-heightBar/2,widthBar,heightBar);
 
-      x += heightBar + 1;
+      x += widthBar + 1;
     }
     // 3 rappel animation
     requestAnimationFrame(() => { this.visualize() });
