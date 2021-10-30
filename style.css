@@ -1,0 +1,21 @@
+body {
+    font-family: 'Zen Antique Soft', serif;
+    margin: 0;
+    padding: 0;
+    background-color: #202124;
+    font-size: 62.5%;
+}
+
+.full-screen {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items:center;
+}
+
+.title {
+    color: #e8eaed;
+    height: fit-content;
+    font-size: 3.8em
+}
