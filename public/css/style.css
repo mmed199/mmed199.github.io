@@ -56,3 +56,29 @@ nav, section {
 .section-point {
     margin-bottom: 0.8rem;
 }
+
+/* media queries */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+}
+
+@media (max-width: 425px) {
+    .container {
+        width: 90%;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+
+    .navigation-links {
+        margin-top: 1rem;
+    }
+
+    .navigation a {
+        margin-left: 0;
+        margin-right: 1rem;
+    }
+}
