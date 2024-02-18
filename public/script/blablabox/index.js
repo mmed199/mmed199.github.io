@@ -1,27 +1,42 @@
+const NFC_NOT_SUPPORTED = 'NFC not supported'
+
+const SCAN_CARD = 'Please scan the attendee card'
+const ASK_PERMISSION = 'Please allow access to NFC'
+
+const title = document.getElementById('card-scanner-title');
+
+
 window.onload = function() {
   if (!('NDEFReader' in window)) {
-    document.getElementById('card-scanner-title').innerHTML = 'NFC not supported'
+    title.innerHTML = NFC_NOT_SUPPORTED
+  } else {
+    navigator.permissions.query({ name: 'nfc'}).then(result => {
+      if (result.state === 'granted') {
+        title.innerHTML = SCAN_CARD
+      } else {
+        title.innerHTML = ASK_PERMISSION
+      }
+    })
   }
 
   const scanButton = document.getElementById('ask-permission')
 
   scanButton.addEventListener("click", async () => {
-    document.getElementById('card-scanner-title').innerHTML = "User clicked scan button"
-
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      document.getElementById('card-scanner-title').innerHTML = 'Scan your card'
+      title.innerHTML = 'Scan your card'
 
       ndef.addEventListener("readingerror", () => {
-        document.getElementById('card-scanner-title').innerHTML = "Argh! Cannot read data from the NFC tag. Try another one?"
+        title.innerHTML = "Argh! Cannot read data from the atendee card. Try another one?"
       });
 
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        document.getElementById('card-scanner-title').innerHTML = `> Serial Number: ${serialNumber}`
+        title.innerHTML = `> Serial Number: ${serialNumber}`
       });
+
     } catch (error) {
-      document.getElementById('card-scanner-title').innerHTML = "Argh! " + error
+      title.innerHTML = "Argh! " + error
     }
   });
 }
