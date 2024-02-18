@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Noto Serif', serif;
+}
+
+body {
+    font-family: 'Noto Serif', serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #e8dbd0;
+}
+
+.scanner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card-scanner {
+    min-width: 80%;
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-scanner-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-scanner-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
