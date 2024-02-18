@@ -4,3 +4,10 @@
     box-sizing: border-box;
     background-color: #efeae4;
 }
+
+.scanner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
