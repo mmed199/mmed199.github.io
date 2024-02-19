@@ -31,6 +31,9 @@ export async function permissionGranted() {
   button.innerHTML = constants.SCAN_CARD_BUTTON;
   // Show the write button
   writeButton.style.display = "block";
+
+    writeBlock.style.display = "none";
+    ticketBlock.style.display = "none";
 }
 
 writeButton.addEventListener("click", () => {
@@ -55,4 +58,23 @@ export async function hideAll() {
 
 export function getTicketNumber() {
   return document.getElementById("writer-input").value;
+}
+
+export async function searchAttendee(ticketNumber) {
+    const attendee = attendees.find(attendee => attendee.number === ticketNumber)
+    
+    const name = document.getElementById("attendee-name");
+    const email = document.getElementById("attendee-email");
+    const github = document.getElementById("attendee-github");
+    const ticketNumber = document.getElementById("attendee-ticket-number");
+
+    if(attendee) {
+        name.innerHTML = attendee.name;
+        email.innerHTML = attendee.email;
+        github.innerHTML = attendee.github;
+        ticketNumber.innerHTML = attendee.number;
+        showTicketBlock();
+    } else {
+        title.innerHTML = "Attendee not found. Try another one?";
+    }
 }

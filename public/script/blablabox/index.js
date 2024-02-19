@@ -47,13 +47,3 @@ window.onload = function() {
     hideAll();
   });
 }
-
-
-async function searchAttendee(ticketNumber) {
-  const attendee = attendees.find(attendee => attendee.number === ticketNumber)
-  if(attendee) {
-    title.innerHTML = `Welcome ${attendee.name}!`
-  } else {
-    title.innerHTML = "Sorry, you are not on the list"
-  }
-}
