@@ -40,6 +40,7 @@ window.onload = function() {
   });
 
   buttonScan.addEventListener("click", async () => {
+    title.innerHTML = 'Writing...'
     const ndef = new NDEFReader();
     const ticketNumber = getTicketNumber();
     await ndef.write(ticketNumber);

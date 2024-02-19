@@ -48,6 +48,7 @@ export async function showTicketBlock() {
 }
 
 export async function hideAll() {
+    permissionGranted();
   writeBlock.style.display = "none";
   ticketBlock.style.display = "none";
 }
