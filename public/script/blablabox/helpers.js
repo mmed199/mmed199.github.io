@@ -12,6 +12,9 @@ export async function notSupported() {
   button.innerHTML = constants.NFC_NOT_SUPPORTED_BUTTON;
   // Hide the write button
   writeButton.style.display = "none";
+
+  // writeBlock.style.display = "none";
+  // ticketBlock.style.display = "none";
 }
 
 export async function askPermission() {
@@ -40,4 +43,12 @@ export async function showWriteBlock() {
 export async function showTicketBlock() {
     writeBlock.style.display = "none";
     ticketBlock.style.display = "block";
+}
+
+export async function hideWriteBlock() {
+    writeBlock.style.display = "none";
+}
+
+export async function getTicketNumber() {
+  return document.getElementById("writer-input").value;
 }

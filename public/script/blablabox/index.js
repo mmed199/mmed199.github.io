@@ -1,9 +1,9 @@
 import { attendees } from "./attendees.js";
-import { notSupported, askPermission, permissionGranted, showTicketBlock, showWriteBlock } from "./helpers.js";
+import { notSupported, askPermission, permissionGranted, hideWriteBlock, showWriteBlock, getTicketNumber } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
-const button = document.getElementById('card-scanner-button');
-
+const buttonScan = document.getElementById('card-scanner-button');
+const buttonWrite = document.getElementById('write-button');
 
 window.onload = function() {
   if (!('NDEFReader' in window)) {
@@ -15,7 +15,7 @@ window.onload = function() {
   }
 
 
-  button.addEventListener("click", async () => {
+  buttonScan.addEventListener("click", async () => {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
@@ -37,6 +37,13 @@ window.onload = function() {
     } catch (error) {
       title.innerHTML = "Argh! " + error
     }
+  });
+
+  buttonScan.addEventListener("click", async () => {
+    const ndef = new NDEFReader();
+    const ticketNumber = await getTicketNumber();
+    await ndef.write(ticketNumber);
+    hideWriteBlock();
   });
 }
 
