@@ -22,6 +22,8 @@ export async function askPermission() {
   button.innerHTML = constants.ASK_PERMISSION_BUTTON;
   // Hide the write button
   writeButton.style.display = "none";
+  writeBlock.style.display = "none";
+  ticketBlock.style.display = "none";
 }
 
 export async function permissionGranted() {
@@ -36,18 +38,18 @@ writeButton.addEventListener("click", () => {
 });
 
 export async function showWriteBlock() {
-    writeBlock.style.display = "block";
-    ticketBlock.style.display = "none";
+  writeBlock.style.display = "block";
+  ticketBlock.style.display = "none";
 }
 
 export async function showTicketBlock() {
-    writeBlock.style.display = "none";
-    ticketBlock.style.display = "block";
+  writeBlock.style.display = "none";
+  ticketBlock.style.display = "block";
 }
 
 export async function hideAll() {
-    writeBlock.style.display = "none";
-    ticketBlock.style.display = "none";
+  writeBlock.style.display = "none";
+  ticketBlock.style.display = "none";
 }
 
 export function getTicketNumber() {

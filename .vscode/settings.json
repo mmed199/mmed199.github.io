@@ -1,0 +1,12 @@
+{
+    "liveServer.settings.port": 5501,
+    "liveServer.settings.root": "/",
+    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.https": {
+      "enable": true,
+      // CHANGE WITH THE FULL PATH TO THE FILE
+      "cert": "C:/Users/mohammed.moussaoui/Desktop/mmed199.github.io/localhost.pem",
+      "key": "C:/Users/mohammed.moussaoui/Desktop/mmed199.github.io/localhost.key",
+      "passphrase": "Moussaoui1998"
+    }
+  }
