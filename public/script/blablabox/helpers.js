@@ -1,4 +1,6 @@
 import { constants } from "./constants.js";
+import { attendees } from "./attendees.js";
+
 
 const title = document.getElementById("card-scanner-title");
 const button = document.getElementById("card-scanner-button");
