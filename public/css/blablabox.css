@@ -22,14 +22,14 @@ body {
 }
 
 .card-scanner {
-    min-width: 80%;
-    padding: 2rem;
+    width: 80%;
     background-color: #fff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 1rem;
 }
 
 .card-scanner-title {
@@ -63,6 +63,7 @@ button {
     flex-direction: column;
     align-items: center;
     color : white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     width: 80%;
 }
 
@@ -86,4 +87,12 @@ button {
 
 #write-block {
     display: none;
+    width: 80%;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
 }
