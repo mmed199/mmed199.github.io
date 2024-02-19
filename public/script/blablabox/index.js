@@ -1,5 +1,5 @@
 import { attendees } from "./attendees.js";
-import { notSupported, askPermission, permissionGranted, hideAll, getTicketNumber } from "./helpers.js";
+import { notSupported, askPermission, permissionGranted, hideAll, getTicketNumber, searchAttendee } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
 const buttonScan = document.getElementById('card-scanner-button');
