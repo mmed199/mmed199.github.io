@@ -1,4 +1,3 @@
-import { attendees } from "./attendees.js";
 import { notSupported, askPermission, permissionGranted, hideAll, getTicketNumber, searchAttendee } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
@@ -20,11 +19,8 @@ window.onload = function() {
       const ndef = new NDEFReader();
       await ndef.scan();
 
-      ndef.addEventListener("readingerror", () => {
-        title.innerHTML = "Argh! Cannot read data from the atendee card. Try another one?"
-      });
-
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        title.innerHTML = "Card found"
         for (const record of message.records) {
                 
           if(record.recordType == "text") {
@@ -46,4 +42,7 @@ window.onload = function() {
     await ndef.write(ticketNumber);
     hideAll();
   });
+
+
+
 }
