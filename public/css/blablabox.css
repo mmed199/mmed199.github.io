@@ -13,10 +13,11 @@ body {
     background-color: #e8dbd0;
 }
 
-.scanner-container {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
 }
 
