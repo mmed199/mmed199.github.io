@@ -65,8 +65,6 @@ export function getTicketNumber() {
 export function searchAttendee(ticketNumber) {
     const attendee = attendees.find(attendee => attendee.number === ticketNumber)
     
-    title.innerHTML = ticketNumber;
-
     const name = document.getElementById("attendee-name");
     const email = document.getElementById("attendee-email");
     const github = document.getElementById("attendee-github");
