@@ -5,9 +5,12 @@ const buttonScan = document.getElementById('card-scanner-button');
 const buttonWrite = document.getElementById('write-button');
 
 window.onload = function() {
+
+  // 1 - Check if the browser supports NFC
   if (!('NDEFReader' in window)) {
     notSupported()
   } else {
+    // 2 - Check if the user has granted permission to use NFC
     navigator.permissions.query({ name: 'nfc'}).then(result => {
       result.state === 'granted' ? permissionGranted() : askPermission()
     })
@@ -17,13 +20,16 @@ window.onload = function() {
   buttonScan.addEventListener("click", async () => {
     try {
       title.innerHTML = "Scanning..."
+
+      // 3 - Scan the NFC tag
       const ndef = new NDEFReader();
       await ndef.scan();
 
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
         title.innerHTML = "Card found"
         for (const record of message.records) {
-                
+          
+          // 4 - Read the text record
           if(record.recordType == "text") {
               const textDecoder = new TextDecoder(record.encoding)
               searchAttendee(textDecoder.decode(record.data))
@@ -38,9 +44,12 @@ window.onload = function() {
 
   buttonWrite.addEventListener("click", async () => {
     title.innerHTML = 'Writing...'
-    const ndef = new NDEFReader();
     const ticketNumber = getTicketNumber();
+
+    // 5 - Write the ticket number to the NFC tag
+    const ndef = new NDEFReader();
     await ndef.write(ticketNumber);
+
     hideAll();
   });
 }
