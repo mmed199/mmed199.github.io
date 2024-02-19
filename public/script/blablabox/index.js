@@ -16,6 +16,7 @@ window.onload = function() {
 
   buttonScan.addEventListener("click", async () => {
     try {
+      title.innerHTML = "Scanning..."
       const ndef = new NDEFReader();
       await ndef.scan();
 
@@ -42,7 +43,4 @@ window.onload = function() {
     await ndef.write(ticketNumber);
     hideAll();
   });
-
-
-
 }
