@@ -68,13 +68,13 @@ export async function searchAttendee(ticketNumber) {
     const name = document.getElementById("attendee-name");
     const email = document.getElementById("attendee-email");
     const github = document.getElementById("attendee-github");
-    const ticketNumber = document.getElementById("attendee-ticket-number");
+    const number = document.getElementById("attendee-ticket-number");
 
     if(attendee) {
         name.innerHTML = attendee.name;
         email.innerHTML = attendee.email;
         github.innerHTML = attendee.github;
-        ticketNumber.innerHTML = attendee.number;
+        number.innerHTML = attendee.number;
         showTicketBlock();
     } else {
         title.innerHTML = "Attendee not found. Try another one?";
