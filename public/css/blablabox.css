@@ -13,22 +13,23 @@ body {
     background-color: #e8dbd0;
 }
 
-.scanner-container {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
 }
 
 .card-scanner {
-    min-width: 80%;
-    padding: 2rem;
+    width: 80%;
     background-color: #fff;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 1rem;
 }
 
 .card-scanner-title {
@@ -36,7 +37,7 @@ body {
     font-weight: bold;
 }
 
-.card-scanner-button {
+button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     background-color: #f5f5f5;
@@ -44,4 +45,63 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
+}
+
+.ticket-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.ticket {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #a77a60;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color : white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    width: 80%;
+}
+
+.attendee-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.attendee-github {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.attendee-ticket-number {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 2px solid #fff;
+}
+
+#write-block {
+    margin-top: 1rem;
+    display: none;
+    width: 80%;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+}
+
+input {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 2px solid #a77a60;
+    width: 80%;
 }

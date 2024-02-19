@@ -1,55 +1,58 @@
-const NFC_NOT_SUPPORTED = {
-  title : 'NFC not supported',
-  button : '/'
-}
-const SCAN_CARD = {
-  title : 'Please scan the attendee card',
-  button : 'Scan'
-}
-
-const ASK_PERMISSION = {
-  title : 'Please allow access to NFC to scan the attendee card',
-  button : 'Give permission'
-}
+import { attendees } from "./attendees.js";
+import { notSupported, askPermission, permissionGranted, hideWriteBlock, showWriteBlock, getTicketNumber } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
-const button = document.getElementById('card-scanner-button');
+const buttonScan = document.getElementById('card-scanner-button');
+const buttonWrite = document.getElementById('write-button');
 
 window.onload = function() {
   if (!('NDEFReader' in window)) {
-    title.innerHTML = NFC_NOT_SUPPORTED.title
-    button.innerHTML = NFC_NOT_SUPPORTED.button
+    notSupported()
   } else {
     navigator.permissions.query({ name: 'nfc'}).then(result => {
-      if (result.state === 'granted') {
-        title.innerHTML = SCAN_CARD.title
-        button.innerHTML = SCAN_CARD.button
-      } else {
-        title.innerHTML = ASK_PERMISSION.title
-        button.innerHTML = ASK_PERMISSION.button
-      }
+      result.state === 'granted' ? permissionGranted() : askPermission()
     })
   }
 
 
-  button.addEventListener("click", async () => {
+  buttonScan.addEventListener("click", async () => {
     try {
       const ndef = new NDEFReader();
       await ndef.scan();
-      title.innerHTML = SCAN_CARD.title
-      button.innerHTML = SCAN_CARD.button
 
       ndef.addEventListener("readingerror", () => {
         title.innerHTML = "Argh! Cannot read data from the atendee card. Try another one?"
       });
 
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
-        title.innerHTML = `> Serial Number: ${serialNumber}`
+        for (const record of message.records) {
+                
+          if(record.recordType == "text") {
+              const textDecoder = new TextDecoder(record.encoding)
+              searchAttendee(textDecoder.decode(record.data))
+          }
+        }
       });
 
     } catch (error) {
       title.innerHTML = "Argh! " + error
     }
   });
+
+  buttonScan.addEventListener("click", async () => {
+    const ndef = new NDEFReader();
+    const ticketNumber = await getTicketNumber();
+    await ndef.write(ticketNumber);
+    hideWriteBlock();
+  });
 }
 
+
+async function searchAttendee(ticketNumber) {
+  const attendee = attendees.find(attendee => attendee.number === ticketNumber)
+  if(attendee) {
+    title.innerHTML = `Welcome ${attendee.name}!`
+  } else {
+    title.innerHTML = "Sorry, you are not on the list"
+  }
+}

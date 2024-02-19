@@ -8,17 +8,36 @@
         <link rel="stylesheet" href="../../public/css/blablabox.css">
     </head>
     <body>
-        <div class="scanner-container">
+        <div class="container">
             <div class="card-scanner">
                 <div class="card-scanner-title" id="card-scanner-title">
                     Please allow access to NFC to scan the attendee card
                 </div>
                 <div>
-                    <button id="card-scanner-button" class="card-scanner-button">Give permission</button>
+                    <button id="card-scanner-button" >Give permission</button>
+                    <button id="card-writer-button" >Write card</button>
                 </div>
             </div>
+            <div class="ticket" id="ticket-block">
+                <div class="attendee-name">
+                    Mohammed Moussaoui
+                </div>
+                <div class="attendee-github">
+                    @mmed199
+                </div>
+                <div class="attendee-email">
+                    mohammed.moussaoui@gmail.com
+                </div>
+                <div class="attendee-ticket-number">
+                    N 000124
+                </div>
+            </div>
+            <div class="writer" id="write-block">
+                <input type="text" id="writer-input" placeholder="Enter the ticket number"/>
+                <button id="write-button">Write</button>
+            </div>
         </div>
-        
+
         <script type="module" src="../../public/script/blablabox/index.js"></script>
     </body>
 </html>
