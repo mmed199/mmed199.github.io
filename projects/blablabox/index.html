@@ -14,10 +14,11 @@
                     Please allow access to NFC to scan the attendee card
                 </div>
                 <div>
-                    <button id="card-scanner-button" class="card-scanner-button">Give permission</button>
+                    <button id="card-scanner-button" >Give permission</button>
+                    <button id="card-writer-button" >Write card</button>
                 </div>
             </div>
-            <div class="ticket" id="ticket">
+            <div class="ticket" id="ticket-block">
                 <div class="attendee-name">
                     Mohammed Moussaoui
                 </div>
@@ -30,6 +31,10 @@
                 <div class="attendee-ticket-number">
                     N 000124
                 </div>
+            </div>
+            <div class="writer" id="write-block">
+                <input type="text" id="writer-input" placeholder="Enter the ticket number"/>
+                <button id="writer-button">Write</button>
             </div>
         </div>
 

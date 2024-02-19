@@ -1,8 +1,9 @@
 import { attendees } from "./attendees.js";
-import { notSupported, askPermission, permissionGranted } from "./helpers.js";
+import { notSupported, askPermission, permissionGranted, showTicketBlock, showWriteBlock } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
 const button = document.getElementById('card-scanner-button');
+
 
 window.onload = function() {
   if (!('NDEFReader' in window)) {
