@@ -45,3 +45,40 @@ body {
     cursor: pointer;
     transition: 0.3s;
 }
+
+.ticket-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.ticket {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #a77a60;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color : white;
+    width: 80%;
+}
+
+.attendee-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.attendee-github {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.attendee-ticket-number {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 2px solid #fff;
+}
