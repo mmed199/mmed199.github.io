@@ -45,10 +45,11 @@ export async function showTicketBlock() {
     ticketBlock.style.display = "block";
 }
 
-export async function hideWriteBlock() {
+export async function hideAll() {
     writeBlock.style.display = "none";
+    ticketBlock.style.display = "none";
 }
 
-export async function getTicketNumber() {
+export function getTicketNumber() {
   return document.getElementById("writer-input").value;
 }

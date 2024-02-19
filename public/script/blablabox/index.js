@@ -41,9 +41,9 @@ window.onload = function() {
 
   buttonScan.addEventListener("click", async () => {
     const ndef = new NDEFReader();
-    const ticketNumber = await getTicketNumber();
+    const ticketNumber = getTicketNumber();
     await ndef.write(ticketNumber);
-    hideWriteBlock();
+    hideAll();
   });
 }
 
