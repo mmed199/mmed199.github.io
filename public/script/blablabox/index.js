@@ -7,13 +7,12 @@ const buttonWrite = document.getElementById('write-button');
 window.onload = function() {
 
   // 1 - Check if the browser supports NFC
-  if (!('NDEFReader' in window)) {
-    notSupported()
+  if('NDEFReader' in window) {
+    navigator.permissions.query({ name: "nfc" }).then(permissionStatus => {
+      permissionStatus.state === 'granted' ? permissionGranted() : askPermission();
+    });
   } else {
-    // 2 - Check if the user has granted permission to use NFC
-    navigator.permissions.query({ name: 'nfc'}).then(result => {
-      result.state === 'granted' ? permissionGranted() : askPermission()
-    })
+    notSupported();
   }
 
 
