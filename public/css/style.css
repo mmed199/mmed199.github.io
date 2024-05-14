@@ -36,6 +36,22 @@ body {
 
     --third-200: #d9ceff;
     --third-400: #ac88fd;
+
+    --linkedin-bg: #82bef7;
+    --linkedin-color: #0b2546;
+    --linkedin-border: #67acf3;
+    --linkedin-shadow: #82bef7;
+
+    --blog-bg: #d3eac8;
+    --blog-color: #2b4522;
+    --blog-border: #82bd69;
+    --blog-shadow: #82bd69;
+
+    --download-bg: #e7e7e7;
+    --download-color: #3d3d3d;
+    --download-border: #b0b0b0;
+    --download-shadow: #b0b0b0;
+
     margin: 0;
     padding: 1rem;
     background-color: var(--primary-50);
@@ -61,6 +77,21 @@ body.dark-mode {
 
     --third-200: #292f42;
     --third-400: #3d496b;
+
+    --linkedin-bg: #0b2546;
+    --linkedin-color: #82bef7;
+    --linkedin-border: #2448a9;
+    --linkedin-shadow: #0b2546;
+
+    --blog-bg: #2b4522;
+    --blog-color: #d3eac8;
+    --blog-border: #83bd6b;
+    --blog-shadow: #2b4522;
+
+    --download-bg: #3d3d3d;
+    --download-color: #e7e7e7;
+    --download-border: #b0b0b0;
+    --download-shadow: #3d3d3d;
 
     background-color: var(--primary-50);
     color: var(--primary-950);
@@ -323,25 +354,25 @@ a, a:link, a:visited, a:hover, a:active {
 }
 
 .linkedin-link {
-    background-color: #82bef7;
-    border: 1px solid #409ef0;
-    color: #0b2546;
-    fill: #0b2546;
-    --tw-shadow-color: #82bef7;
+    background-color: var(--linkedin-bg);
+    border: 1px solid var(--linkedin-border);
+    color: var(--linkedin-color) !important;;
+    fill: var(--linkedin-color);
+    --tw-shadow-color: var(--linkedin-shadow);
 }
 
 .blog-link {
-    background-color: #d3eac8;
-    border: 1px solid #82bd69;
-    color: #2b4522;
-    fill: #2b4522;
-    --tw-shadow-color: #82bd69;
+    background-color: var(--blog-bg);
+    border: 1px solid var(--blog-border);
+    color: var(--blog-color) !important;;
+    fill: var(--blog-color);
+    --tw-shadow-color: var(--blog-shadow);
 }
 
 .resume-link {
-    background-color: #e7e7e7;
-    border: 1px solid #b0b0b0;
-    color: #3d3d3d;
-    fill: #3d3d3d;
-    --tw-shadow-color: #b0b0b0;
+    background-color: var(--download-bg);
+    border: 1px solid var(--download-border);
+    color: var(--download-color) !important;;
+    fill: var(--download-color);
+    --tw-shadow-color: var(--download-shadow);
 }
