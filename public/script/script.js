@@ -1,60 +1,57 @@
-const carouselText = [
-    {color: "#ea4436", fontFamily: "Fruktur"},
-    {color: "#347d39", fontFamily: "Inconsolata"},
-    {color: "#2869e9", fontFamily: "Irish Grover"},
-    {color: "#ec775c", fontFamily: "Bebas Neue"},
-  ]
+window.onload = function() {
+    // Noise
+    const noisyElements = document.querySelectorAll('.noisy');
+    noisyElements.forEach((element) => {
+        const borderRadius = window.getComputedStyle(element).getPropertyValue('border-radius') || '0px';
+        element.innerHTML = `<svg width="100%" height="100%" class="noise" style="border-radius: ${borderRadius}"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.80" numOctaves="4" stitchTiles="stitch"></feTurbulence></filter><rect width="100%" height="100%" filter="url(#noise)"></rect></svg> ${element.innerHTML}`;
+        element.style.position = 'relative';
+    });
 
-$(document).ready(async function () {
-    carousel(carouselText, "#typing-effect")
-});
-
-async function carousel(carouselList, eleRef) {
-    var i = 0;
-    while (true) {
-        updateFont(eleRef, carouselList[i].fontFamily)
-        updateColor(eleRef, carouselList[i].color)
-        //await typeSentence(carouselList[i].text, eleRef);
-        await waitForMs(800);
-        //await deleteSentence(eleRef);
-        //await waitForMs(500);
-        i++
-        if (i >= carouselList.length) {
-            i = 0;
-        }
+    // Dark mode toggle
+    const darkModeToggle = document.querySelector('#dark-mode-toggle');
+    const darkMode = localStorage.getItem('dark-mode');
+    if (darkMode === 'true') {
+        document.body.classList.add('dark-mode');
     }
+
+    darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+    });
+
+
+    // Get Learning
+    const itLearningList = document.querySelector('#it_learning_list');
+    const booksReadingList = document.querySelector('#books_reading_list');
+
+    fetch('https://care-space-42021ec4f14c.herokuapp.com/notion/actual_learning')
+        .then(response => response.json())
+        .then(response => {
+            if (response.it && response.it.length > 0) {
+                itLearningList.innerHTML = response.it.map((item) => `<div>${item}</div>`).join('');
+            } else {
+                itLearningVide();
+            }
+
+            if (response.books && response.books.length > 0) {
+                booksReadingList.innerHTML = response.books.map((item) => `<div>${item}</div>`).join('');
+            } else {
+                booksReadingVide();
+            }
+
+        })
+        .catch(() => {
+            itLearningVide();
+            booksReadingVide();
+        })
 }
 
-async function typeSentence(sentence, eleRef, delay = 100) {
-    const letters = sentence.split("");
-    let i = 0;
-    while (i < letters.length) {
-        await waitForMs(delay);
-        $(eleRef).append(letters[i]);
-        i++
-    }
-    return;
+function itLearningVide () {
+    const itLearningList = document.querySelector('#it_learning_list');
+    itLearningList.innerHTML = '<div>🤞 Notion API</div><div>☸️ Kubernetes</div>';
 }
 
-async function deleteSentence(eleRef) {
-    const sentence = $(eleRef).html();
-    const letters = sentence.split("");
-    let i = 0;
-    while (letters.length > 0) {
-        await waitForMs(100);
-        letters.pop();
-        $(eleRef).html(letters.join(""));
-    }
-}
-
-function updateFont(eleRef, fontFamily) {
-    $(eleRef).css('font-family', fontFamily);
-}
-
-function updateColor(eleRef, color) {
-    $(eleRef).css('color', color);
-}
-
-function waitForMs(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+function booksReadingVide() {
+    const booksReadingList = document.querySelector('#books_reading_list');
+    booksReadingList.innerHTML = '<div>🕶️ Blindness (novel)</div>';
 }

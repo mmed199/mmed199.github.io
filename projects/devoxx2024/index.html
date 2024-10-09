@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NATS Quiz Leaderboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        #app {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            margin: 10px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 1.5rem;
+        }
+        #question {
+            font-size: 1.2em;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        #answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background-color: #764ba2;
+            transform: translateY(-2px);
+        }
+        #leaderboard {
+            margin-top: 2rem;
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        #username-input {
+            margin-bottom: 1.5rem;
+        }
+        #username-input input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #timer {
+            font-size: 1.2em;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #e74c3c;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .highlight { 
+            color: #e74c3c;
+         }
+         
+         #username-display {
+            font-size: 1.2em;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+         }
+
+         #waiting-message {
+            font-size: 1.2em;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>NATS Real-Time Quiz</h1>
+        <div id="username-input">
+            <input type="text" id="username" placeholder="Enter your username">
+            <button id="setUsernameButton">Join Quiz</button>
+        </div>
+        <div id="username-display"></div>
+        <div id="quiz" style="display: none;">
+            <div id="question" class="fade-in"></div>
+            <div id="answers" class="fade-in"></div>
+            <div id="timer" class="fade-in"></div>
+        </div>
+        <div id="waiting-message" style="display: none;">Waiting for questions...</div>
+        <div id="leaderboard" class="fade-in" style="display: none;"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <script defer type="module">
+        // ES6 modules can be natively used by set the script type
+        // to "module". Now we can use native imports.
+        import {
+          connect,
+          StringCodec,
+          headers as natsHeaders
+        } from "https://cdn.jsdelivr.net/npm/nats.ws@1.29.0/esm/nats.js";
+  
+        const jsConfetti = new JSConfetti()
+
+        const questions = [
+        {
+            question: "What's the primary purpose of NATS?",
+            answers: ["Data Storage", "Message Streaming", "Web Hosting", "File Sharing"],
+        },
+        {
+            question: "What's the primary model of NATS?",
+            answers: ["Pub/Sub", "Req/Reply", "Object Store", "Key/Value"],
+        },
+        {
+            question: "What is NATS JetStream?",
+            answers: [" A video streaming service", 
+                "A persistent, streaming data store built on NATS", 
+                "A load balancing feature in NATS", 
+                "A client library for NATS"],
+        }
+            // Add more questions here
+        ];
+
+        let nc;
+        let username;
+        let userId;
+        let currentQuestion;
+        let leaderboard = {};
+        let showLeaderboard = true;
+        let timeLeft;
+        const sc = new StringCodec();
+
+        function loadFromLocalStorage() {
+            username = localStorage.getItem('username');
+            userId = localStorage.getItem('userId');
+            showLeaderboard = localStorage.getItem('showLeaderboard') !== 'false';
+            console.log(showLeaderboard);
+            if (username && userId) {
+                document.getElementById("username-input").style.display = "none";
+                document.getElementById("quiz").style.display = "block";
+                document.getElementById("waiting-message").style.display = "block";
+                document.getElementById("username-display").innerText = username;
+                connectNats();
+            }
+        }
+
+        async function connectNats() {
+            const server = "wss://demo.nats.io:8443";
+            nc = await connect({ servers: server });
+            console.log("Connected to NATS");
+
+            const questionSub = nc.subscribe("devoxx2024.quiz.question");
+            (async () => {
+                for await (const m of questionSub) {
+                    const data = sc.decode(m.data);
+                    const questionNumber = parseInt(data);
+                    showQuestion(questionNumber);
+                }
+            })();
+
+            const confettiSub = nc.subscribe("devoxx2024.quiz.confetti");
+            (async () => {
+                for await (const m of confettiSub) {
+                    const data = sc.decode(m.data);
+                    const currentPlayer = `${userId}:${username}`;
+
+                    if (data === currentPlayer) {
+                        jsConfetti.addConfetti();
+                    }
+                }
+            })();
+
+            const leaderboardSub = nc.subscribe("devoxx2024.quiz.leaderboard");
+            (async () => {
+                for await (const m of leaderboardSub) {
+                    const data = sc.decode(m.data);
+                    updateLeaderboard(JSON.parse(data));
+                }
+            })();
+
+            const mathSub = nc.subscribe("devoxx2024.quiz.math", {
+                queue: "DEVOXX2024_NATS_DEMO"
+            });
+
+            (async () => {
+                for await (const m of mathSub) {
+                    const equation = sc.decode(m.data);
+                    let result;
+
+                    try {
+                        // Use a safer alternative to eval
+                        result = Function(`'use strict'; return (${equation})`)();
+
+                        // Create headers for the response
+                        const h = natsHeaders();
+                        h.append("username", username);
+
+                        // Respond with the result and headers
+                        m.respond(sc.encode(result.toString()), { headers: h });
+                    } catch (error) {
+                        // If there's an error, send it back as the response
+                        m.respond(sc.encode(`Error: ${error.message}`));
+                    }
+                }
+            })().catch((err) => {
+                console.log(`Subscription error: ${err.message}`);
+            });
+        }
+
+        function setUsername() {
+            username = document.getElementById("username").value;
+            if (username) {
+                userId = generateId();
+                localStorage.setItem('username', username);
+                localStorage.setItem('userId', userId);
+                document.getElementById("username-display").innerText = username;
+                document.getElementById("username-input").style.display = "none";
+                document.getElementById("quiz").style.display = "block";
+                document.getElementById("waiting-message").style.display = "block";
+                connectNats();
+            }
+        }
+
+        function generateId() {
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        function showQuestion(questionNumber) {
+            document.getElementById("leaderboard").style.display = "none";
+            currentQuestion = questions[questionNumber];
+            document.getElementById("question").innerText = currentQuestion.question;
+            const answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = "";
+            currentQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement("button");
+                button.innerText = answer;
+                button.onclick = () => submitAnswer(index);
+                button.className = "fade-in";
+                answersDiv.appendChild(button);
+            });
+            startTimer();
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("waiting-message").style.display = "none";
+        }
+
+        function startTimer() {
+            timeLeft = 100;
+            const timerDiv = document.getElementById("timer");
+            const timer = setInterval(() => {
+                timerDiv.innerText = `Time left: ${timeLeft}s`;
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    document.getElementById("answers").innerHTML = "";
+                    timerDiv.innerText = "Time's up! Wait for the next question...";
+                }
+            }, 1000);
+        }
+
+        async function submitAnswer(answerIndex) {
+            const headers = natsHeaders();
+            headers.append("username", `${userId}:${username}`);
+
+            const message = JSON.stringify(
+                { 
+                    questionIndex: questions.indexOf(currentQuestion), 
+                    answerIndex,
+                    timeLeft
+                }
+            )
+            await nc.publish("devoxx2024.quiz.answer", message , { headers });
+            document.getElementById("leaderboard").style.display = "block";
+            document.getElementById("quiz").style.display = 'none';
+            document.getElementById("waiting-message").style.display = 'block';
+        }
+
+        function updateLeaderboard(leaderboardData) {
+            const leaderboardElement = document.getElementById('leaderboard');
+
+            const leaderbordDisplayed = leaderboardElement.style.display !== 'none';
+            const quizDisplayed = document.getElementById('quiz').style.display !== 'none';
+
+            if (!quizDisplayed && !leaderbordDisplayed) {
+                leaderboardElement.style.display = 'block';
+            }
+
+            const sortedLeaderboard = Object.entries(leaderboardData)
+                .sort(([, a], [, b]) => b - a);
+
+            let leaderboardHTML = '<h2 style="margin-top:0">Leaderboard</h2><div>';
+            
+            const currentPlayer = `${userId}:${username}`;
+            // Display top 5 players
+            for (let i = 0; i < Math.min(3, sortedLeaderboard.length); i++) {
+                const [player, score] = sortedLeaderboard[i];
+                const isCurrentPlayer = player === currentPlayer;
+                leaderboardHTML += `<div ${isCurrentPlayer ? ' class="highlight"' : ''}>${i + 1} - ${player.split(':')[1]}: ${score}</div>`;
+            }
+
+            // If current player is not in top 5, add them at the end
+            const currentPlayerIndex = sortedLeaderboard.findIndex(([player]) => player === currentPlayer);
+            if (currentPlayerIndex >= 3) {
+                const [, score] = sortedLeaderboard[currentPlayerIndex];
+                leaderboardHTML += `<div class="highlight">${currentPlayerIndex + 1} - ${username}: ${score}</div>`;
+            }
+
+            leaderboardHTML += '</div>';
+            leaderboardElement.innerHTML = leaderboardHTML;
+        }
+
+        // Load saved data and initialize on page load
+        document.getElementById("setUsernameButton").addEventListener("click", () => setUsername());
+
+        window.onload = loadFromLocalStorage;
+    </script>
+</body>
+</html>

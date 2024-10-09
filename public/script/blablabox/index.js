@@ -1,32 +1,34 @@
-import { attendees } from "./attendees.js";
-import { notSupported, askPermission, permissionGranted, hideWriteBlock, showWriteBlock, getTicketNumber } from "./helpers.js";
+import { notSupported, askPermission, permissionGranted, hideAll, getTicketNumber, searchAttendee } from "./helpers.js";
 
 const title = document.getElementById('card-scanner-title');
 const buttonScan = document.getElementById('card-scanner-button');
 const buttonWrite = document.getElementById('write-button');
 
 window.onload = function() {
-  if (!('NDEFReader' in window)) {
-    notSupported()
+
+  // 1 - Check if the browser supports NFC
+  if('NDEFReader' in window) {
+    navigator.permissions.query({ name: "nfc" }).then(permissionStatus => {
+      permissionStatus.state === 'granted' ? permissionGranted() : askPermission();
+    });
   } else {
-    navigator.permissions.query({ name: 'nfc'}).then(result => {
-      result.state === 'granted' ? permissionGranted() : askPermission()
-    })
+    notSupported();
   }
 
 
   buttonScan.addEventListener("click", async () => {
     try {
+      title.innerHTML = "Scanning..."
+
+      // 3 - Scan the NFC tag
       const ndef = new NDEFReader();
       await ndef.scan();
 
-      ndef.addEventListener("readingerror", () => {
-        title.innerHTML = "Argh! Cannot read data from the atendee card. Try another one?"
-      });
-
       ndef.addEventListener("reading", ({ message, serialNumber }) => {
+        title.innerHTML = "Card found"
         for (const record of message.records) {
-                
+          
+          // 4 - Read the text record
           if(record.recordType == "text") {
               const textDecoder = new TextDecoder(record.encoding)
               searchAttendee(textDecoder.decode(record.data))
@@ -39,20 +41,14 @@ window.onload = function() {
     }
   });
 
-  buttonScan.addEventListener("click", async () => {
+  buttonWrite.addEventListener("click", async () => {
+    title.innerHTML = 'Writing...'
+    const ticketNumber = getTicketNumber();
+
+    // 5 - Write the ticket number to the NFC tag
     const ndef = new NDEFReader();
-    const ticketNumber = await getTicketNumber();
     await ndef.write(ticketNumber);
-    hideWriteBlock();
+
+    hideAll();
   });
-}
-
-
-async function searchAttendee(ticketNumber) {
-  const attendee = attendees.find(attendee => attendee.number === ticketNumber)
-  if(attendee) {
-    title.innerHTML = `Welcome ${attendee.name}!`
-  } else {
-    title.innerHTML = "Sorry, you are not on the list"
-  }
 }

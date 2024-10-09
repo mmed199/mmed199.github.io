@@ -55,6 +55,7 @@ button {
 }
 
 .ticket {
+    display: none;
     margin-top: 1rem;
     padding: 1rem;
     background-color: #a77a60;
