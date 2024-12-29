@@ -1,4 +1,4 @@
-window.onload = function() {
+window.onload = function () {
     // Noise
     const noisyElements = document.querySelectorAll('.noisy');
     noisyElements.forEach((element) => {
@@ -46,7 +46,16 @@ window.onload = function() {
         })
 }
 
-function itLearningVide () {
+function moreDetails(button) {
+    const details = button.parentElement.parentElement.parentElement.querySelectorAll('.details');
+    details.forEach((element) => {
+        element.classList.toggle('hidden');
+    });
+
+    details[0].classList.contains('hidden') ? button.innerText = '➕ More details' : button.innerText = '➖ Less details';
+}
+
+function itLearningVide() {
     const itLearningList = document.querySelector('#it_learning_list');
     itLearningList.innerHTML = '<div>🤞 Notion API</div><div>☸️ Kubernetes</div>';
 }
