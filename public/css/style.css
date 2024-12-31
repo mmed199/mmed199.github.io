@@ -114,7 +114,6 @@ body.dark-mode .noise {
 .navigation {
     justify-content: space-between;
     padding-bottom: 0.5rem;
-    padding-top: 2rem;
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
